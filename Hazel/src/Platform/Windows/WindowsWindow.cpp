@@ -16,6 +16,11 @@ namespace Hazel {
 
 	Window* Window::Create(const WindowProps& props)
 	{
+		/*
+		Notes:
+		if a Class is inherited from an "Abstruct Class", which contians virtual functions,
+		it must override all virtual functions.
+		*/
 		return new WindowsWindow(props);
 	}
 
