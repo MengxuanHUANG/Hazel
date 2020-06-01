@@ -83,6 +83,8 @@ namespace Hazel {
 			ss << "MouseScrolledEvent: " << m_Offset_X << ", " << m_Offset_Y;
 			return ss.str();
 		}
+		inline float GetOffsetX() const { return m_Offset_X; }
+		inline float GetOffsetY() const { return m_Offset_Y; }
 
 		EVENT_CLASS_TYPE(MouseScrolled)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)

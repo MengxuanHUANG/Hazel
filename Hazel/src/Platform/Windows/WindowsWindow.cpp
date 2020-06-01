@@ -5,6 +5,8 @@
 #include "Hazel/Event/KeyEvent.h"
 #include "Hazel/Event/MouseEvent.h"
 
+#include <glad/glad.h>
+
 namespace Hazel {
 
 	static bool s_GLFWInitialized = false;
@@ -19,7 +21,7 @@ namespace Hazel {
 		/*
 		Notes:
 		if a Class is inherited from an "Abstruct Class", which contians virtual functions,
-		it must override all virtual functions.
+		it must override all virtual functions when use pointers of its parent class .
 		*/
 		return new WindowsWindow(props);
 	}
@@ -53,6 +55,10 @@ namespace Hazel {
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+
+		int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+		HZ_CORE_ASSERT(status, "Failed to iniitalize Glad!");
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
@@ -100,6 +106,14 @@ namespace Hazel {
 					break;
 				}
 			}
+		});
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int input_char)
+		{
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			KeyTypedEvent event(input_char);
+			data.EventCallback(event);
 		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)

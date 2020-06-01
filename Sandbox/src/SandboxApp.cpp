@@ -9,7 +9,7 @@ public:
 
 	void OnUpdate() override
 	{
-		HZ_INFO("Example Undate");
+		//HZ_INFO("Example Undate");
 	}
 
 	void OnEvent(Hazel::Event& event) override
@@ -25,6 +25,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
+		PushOverLayer(new Hazel::ImGuiLayer());
 	}
 
 	~Sandbox()
