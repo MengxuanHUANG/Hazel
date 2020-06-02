@@ -4,8 +4,8 @@
 #include "Hazel/Log.h"
 #include "Hazel/Input.h"
 
-#include<glad/glad.h>
 
+#include<glad/glad.h>
 
 namespace Hazel {
 

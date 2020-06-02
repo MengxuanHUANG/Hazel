@@ -24,7 +24,6 @@ public:
 			HZ_TRACE("{0}", (char)e.GetKeycode());
 		}
 	}
-
 };
 
 class Sandbox : public Hazel::Application
