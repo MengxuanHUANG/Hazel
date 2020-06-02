@@ -2,8 +2,10 @@
 #include "Application.h"
 
 #include "Hazel/Log.h"
+#include "Hazel/Input.h"
 
 #include<glad/glad.h>
+
 
 namespace Hazel {
 
@@ -13,7 +15,7 @@ namespace Hazel {
 
 	Application::Application()
 	{
-		HZ_CORE_ASSERT(s_Instace, "Application already exists");
+		HZ_CORE_ASSERT(!s_Instance, "Application already exists");
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
@@ -61,6 +63,8 @@ namespace Hazel {
 			{
 				layer->OnUpdate();
 			}
+
+			//HZ_CORE_TRACE("{0}, {1}", x, y);
 
 			m_Window->OnUpdate();
 		}
