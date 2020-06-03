@@ -141,7 +141,7 @@ namespace Hazel {
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			MouseScrolledEvent event(X_Offset, Y_Offset);
+			MouseScrolledEvent event((float)X_Offset, (float)Y_Offset);
 			data.EventCallback(event);
 		});
 
