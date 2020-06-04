@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Hazel\Renderer\Shader.h" />
     <ClInclude Include="src\Hazel\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\HZpch.h" />
     <ClInclude Include="src\Hazel.h" />
@@ -581,6 +582,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazel\Renderer\Shader.cpp" />
     <ClCompile Include="src\HZpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
