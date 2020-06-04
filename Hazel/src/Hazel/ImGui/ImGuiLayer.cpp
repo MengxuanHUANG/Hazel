@@ -41,6 +41,8 @@ namespace Hazel
 		//Setup Dear ImGui style
 		ImGui::StyleColorsClassic();
 		
+		//ImGui::Text();
+
 		//When Viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 		ImGuiStyle& style = ImGui::GetStyle();
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
