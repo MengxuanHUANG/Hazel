@@ -4,7 +4,7 @@
 #include "Hazel/Log.h"
 #include "Hazel/Input.h"
 
-#include<glad/glad.h>
+#include "Renderer/RenderCommand.h"
 
 namespace Hazel {
 
@@ -173,18 +173,22 @@ namespace Hazel {
 	{
 		while (m_Running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
 			
+			Renderer::BeginScene();
 
+			//render the square
 			m_BlueShader->Bind();
-			m_Square_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_Square_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);\
-
+			Renderer::Submit(m_Square_VertexArray);
+			
+			//render the triangle
 			m_Shader->Bind();
-			m_VertexArray->Bind();
+			Renderer::Submit(m_VertexArray);
 
-			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::EndScene();
+			
+			Renderer::Flush();
 
 			for (Layer* layer : m_LayerStack)
 			{
