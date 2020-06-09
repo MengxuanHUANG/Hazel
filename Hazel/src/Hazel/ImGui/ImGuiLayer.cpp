@@ -71,6 +71,7 @@ namespace Hazel
 	{
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
+		ImGui::SetWindowFontScale(2.0f);
 	}
 
 	void ImGuiLayer::Begin()
