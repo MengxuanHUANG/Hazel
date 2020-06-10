@@ -7,8 +7,7 @@ namespace Hazel
 	class OpenGLRenderAPI :public RenderAPI
 	{
 	public:
-		OpenGLRenderAPI() {}
-		~OpenGLRenderAPI() {}
+		virtual void Init() override;
 
 		virtual void SetClearColor(const glm::vec4& color) override;
 		virtual void Clear() override;
