@@ -13,167 +13,141 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f)
 	{
-		m_VertexArray.reset(Hazel::VertexArray::Create());
-		float vertices[3 * 7] =
+		//---------------------Triangle-------------------------
 		{
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-			 0.0f, 0.5f, 0.0f,  0.8f, 0.8f, 0.2f, 1.0f
-		};
-		Hazel::Ref<Hazel::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)));
-
-		Hazel::BufferLayout layout = {
-			{ Hazel::ShaderDataType::Float3, "a_Position" },
-			{ Hazel::ShaderDataType::Float4, "a_Color" }
-		};
-
-		vertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-		// Index Buffer
-		uint32_t indices[3] = { 0, 1, 2 };
-		Hazel::Ref<Hazel::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_VertexArray->AddIndexBuffer(indexBuffer);
-
-		std::string vertexSrc = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-
-			uniform mat4  u_ViewProjection;
-			uniform mat4  u_Transform;
-
-			out vec3 v_Position;
-			out vec4 v_Color;
-
-			void main()
+			m_VertexArray.reset(Hazel::VertexArray::Create());
+			float vertices[3 * 7] =
 			{
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-		std::string fragmentSrc = R"(
-			#version 330 core
+				-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
+				 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
+				 0.0f, 0.5f, 0.0f,  0.8f, 0.8f, 0.2f, 1.0f
+			};
+			Hazel::Ref<Hazel::VertexBuffer> vertexBuffer;
+			vertexBuffer.reset(Hazel::VertexBuffer::Create(vertices, sizeof(vertices)));
 
-			layout(location = 0) out vec4 color;
+			Hazel::BufferLayout layout = {
+				{ Hazel::ShaderDataType::Float3, "a_Position" },
+				{ Hazel::ShaderDataType::Float4, "a_Color" }
+			};
 
-			in vec3 v_Position;
-			in vec4 v_Color;
+			vertexBuffer->SetLayout(layout);
+			m_VertexArray->AddVertexBuffer(vertexBuffer);
 
-			void main()
-			{
-				color = vec4(v_Position * 0.5 + 0.5, 1.0);
-			}
-		)";
+			// Index Buffer
+			uint32_t indices[3] = { 0, 1, 2 };
+			Hazel::Ref<Hazel::IndexBuffer> indexBuffer;
+			indexBuffer.reset(Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+			m_VertexArray->AddIndexBuffer(indexBuffer);
 
-		m_Shader.reset(Hazel::Shader::Create(vertexSrc, fragmentSrc));
+			std::string vertexSrc = R"(
+				#version 330 core
 
+				layout(location = 0) in vec3 a_Position;
+				layout(location = 1) in vec4 a_Color;
 
-		//***********test Square*********************** 
+				uniform mat4  u_ViewProjection;
+				uniform mat4  u_Transform;
 
-		float square[5 * 4] =
+				out vec3 v_Position;
+				out vec4 v_Color;
+
+				void main()
+				{
+					v_Position = a_Position;
+					v_Color = a_Color;
+					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+				}
+			)";
+			std::string fragmentSrc = R"(
+				#version 330 core
+
+				layout(location = 0) out vec4 color;
+
+				in vec3 v_Position;
+				in vec4 v_Color;
+
+				void main()
+				{
+					color = vec4(v_Position * 0.5 + 0.5, 1.0);
+				}
+			)";
+
+			m_Shader.reset(Hazel::Shader::Create(vertexSrc, fragmentSrc));
+		}
+
+		//---------------------test Square-----------------------
 		{
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
-		};
-
-		m_Square_VertexArray.reset(Hazel::VertexArray::Create());
-		Hazel::Ref<Hazel::VertexBuffer> squareVB;
-		squareVB.reset(Hazel::VertexBuffer::Create(square, sizeof(square)));
-
-		layout = {
-			{ Hazel::ShaderDataType::Float3, "a_Position" },
-			{ Hazel::ShaderDataType::Float2, "a_TextCoord" }
-		};
-		squareVB->SetLayout(layout);
-		m_Square_VertexArray->AddVertexBuffer(squareVB);
-
-		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Hazel::Ref<Hazel::IndexBuffer> squareIB;
-		squareIB.reset(Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_Square_VertexArray->AddIndexBuffer(squareIB);
-
-		std::string blueVertexSrc = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_Position;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4  u_Transform;
-
-			out vec3 v_Position;
-
-			void main()
+			float square[5 * 4] =
 			{
-				v_Position = a_Position;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-		std::string blueFragmentSrc2 = R"(
-			#version 330 core
+				-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+				 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+				 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+				-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+			};
 
-			layout(location = 0) out vec4 color;
+			m_Square_VertexArray.reset(Hazel::VertexArray::Create());
+			Hazel::Ref<Hazel::VertexBuffer> squareVB;
+			squareVB.reset(Hazel::VertexBuffer::Create(square, sizeof(square)));
 
-			in vec3 v_Position;
+			layout = {
+				{ Hazel::ShaderDataType::Float3, "a_Position" },
+				{ Hazel::ShaderDataType::Float2, "a_TextCoord" }
+			};
+			squareVB->SetLayout(layout);
+			m_Square_VertexArray->AddVertexBuffer(squareVB);
 
-			uniform vec3 u_Color;
+			uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+			Hazel::Ref<Hazel::IndexBuffer> squareIB;
+			squareIB.reset(Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+			m_Square_VertexArray->AddIndexBuffer(squareIB);
 
-			void main()
-			{
-				color = vec4(u_Color, 1.0);
-			}
-		)";
+			std::string blueVertexSrc = R"(
+				#version 330 core
 
-		m_BlueShader.reset(Hazel::Shader::Create(blueVertexSrc, blueFragmentSrc2));
+				layout(location = 0) in vec3 a_Position;
+
+				uniform mat4 u_ViewProjection;
+				uniform mat4  u_Transform;
+
+				out vec3 v_Position;
+
+				void main()
+				{
+					v_Position = a_Position;
+					gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+				}
+			)";
+			std::string blueFragmentSrc2 = R"(
+				#version 330 core
+
+				layout(location = 0) out vec4 color;
+
+				in vec3 v_Position;
+
+				uniform vec3 u_Color;
+
+				void main()
+				{
+					color = vec4(u_Color, 1.0);
+				}
+			)";
+
+			m_BlueShader.reset(Hazel::Shader::Create(blueVertexSrc, blueFragmentSrc2));
+		}
 
 		//--------------------Texture Shader---------------------
-		std::string textureShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoord;
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-			out vec2 v_TexCoord;
-			void main()
-			{
-				v_TexCoord = a_TexCoord;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
-			}
-		)";
+		{
+			m_TextureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
+			m_Texture = Hazel::Texture2D::Create("assets/textures/test_texture.png");
+			//m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::string textureShaderFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-			in vec2 v_TexCoord;
-			
-			uniform sampler2D u_Texture;
-			void main()
-			{
-				color = texture(u_Texture, v_TexCoord);
-			}
-		)";
-
-		m_TextureShader.reset(Hazel::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
-		
-		m_Texture = Hazel::Texture2D::Create("assets/textures/test_texture.png");
-		//m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
-
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+			std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
+			std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+		}
 	}
 
 	void OnUpdate(Hazel::Timestep timestep) override
 	{
-		//HZ_TRACE("Delta time {0}s ({1}ms)", timestep.GetSeconds(), timestep.GetMilliSeconds());
-
 		float ts = timestep;
 		
 		//Move Camera
@@ -191,24 +165,31 @@ public:
 		if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
 			m_CameraRotation -= m_CameraRotatedSpeed * ts;
 
+		//Set BackGround Color
 		Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Hazel::RenderCommand::Clear();
 
+		//Set Camera Position
 		m_Camera.SetPostion(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 
+		//Start a new Scene
 		Hazel::Renderer::BeginScene(m_Camera);
 
-		static glm::mat scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-
+		//++++++++++++++++++++Will be implement in the future++++++++++++++
 		/*Hazel::Material* material = new Hazel::Material(m_FlatColorShader);
 		material->Set("u_Color", redColor);
 
 		squareMesh->SetMeterial(material);*/
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+		//set up the Scale Matrix
+		static glm::mat scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_BlueShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_BlueShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
+		//*********************Render the Square Matrix**********************
 		/*for (int j = 0; j < 20; ++j)
 		{
 			for (int i = 0; i < 20; ++i)
@@ -220,14 +201,18 @@ public:
 			}
 		}*/
 
+		//****************************Render the Image*************************
 		m_Texture->Bind();
 		Hazel::Renderer::Submit(m_TextureShader, m_Square_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
+		//*************************Rendere the Logo***************************
 		//m_LogoTexture->Bind();
 		//Hazel::Renderer::Submit(m_TextureShader, m_Square_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-		//Triangle
+		//*********************Render the test Triangle************************
 		//Hazel::Renderer::Submit(m_Shader, m_VertexArray);
+
+		//End the Scene
 		Hazel::Renderer::EndScene();
 		Hazel::Renderer::Flush();
 	}
