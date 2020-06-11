@@ -1,11 +1,15 @@
 #include<Hazel.h>
 
+#include<Hazel/Core/EntryPoint.h>
+
 #include "imgui/imgui.h"
 
 #include<glm/gtc/matrix_transform.hpp>
 
 #include "Platform/OpenGL/Renderer/OpenGLShader.h"
 #include<glm/gtc/type_ptr.hpp>
+
+#include"Sandbox2D.h"
 
 class ExampleLayer : public Hazel::Layer
 {
@@ -15,7 +19,7 @@ public:
 	{
 		//---------------------Triangle-------------------------
 		{
-			m_VertexArray.reset(Hazel::VertexArray::Create());
+			m_VertexArray = Hazel::VertexArray::Create();
 			float vertices[3 * 7] =
 			{
 				-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -85,7 +89,7 @@ public:
 				-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 			};
 
-			m_Square_VertexArray.reset(Hazel::VertexArray::Create());
+			m_Square_VertexArray = Hazel::VertexArray::Create();
 			Hazel::Ref<Hazel::VertexBuffer> squareVB;
 			squareVB.reset(Hazel::VertexBuffer::Create(square, sizeof(square)));
 
@@ -197,7 +201,7 @@ public:
 
 		//End the Scene
 		Hazel::Renderer::EndScene();
-		Hazel::Renderer::Flush();
+		//Hazel::Renderer::Flush();
 	}
 
 	void OnImGuiRender(float timestep) override
@@ -222,11 +226,6 @@ public:
 	void OnEvent(Hazel::Event& event) override
 	{
 		m_CameraController.OnEvent(event);
-
-		if (event.GetEventType() == Hazel::EventType::WindowResize)
-		{
-			auto& re = (Hazel::WindowResizeEvent&) event;
-		}
 	}
 
 	bool OnKeyPressedEvent(Hazel::KeyPressedEvent& event)
@@ -259,8 +258,8 @@ class Sandbox : public Hazel::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
-
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()
