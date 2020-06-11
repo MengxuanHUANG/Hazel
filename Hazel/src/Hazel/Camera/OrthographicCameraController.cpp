@@ -3,8 +3,8 @@
 
 #include "Hazel/Core/Timestep.h"
 
-#include "Hazel/Input.h"
-#include "Hazel/Keycode.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Core/Keycode.h"
 
 namespace Hazel
 {

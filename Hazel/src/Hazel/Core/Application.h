@@ -4,8 +4,8 @@
 
 #include "Window.h"
 
-#include "Hazel/LayerStack.h"
-#include "Event/Event.h"
+#include "Hazel/Core/LayerStack.h"
+#include "Hazel/Event/Event.h"
 #include "Hazel/Event/ApplicationEvent.h"
 
 #include "Hazel/ImGui/ImGuiLayer.h"

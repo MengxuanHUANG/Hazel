@@ -3,10 +3,10 @@
 
 #include "Hazel/Core/Timestep.h"
 
-#include "Hazel/Log.h"
-#include "Hazel/Input.h"
+#include "Hazel/Core/Log.h"
+#include "Hazel/Core/Input.h"
 
-#include "Renderer/RenderCommand.h"
+#include "Hazel/Renderer/RenderCommand.h"
 
 #include <GLFW/glfw3.h>
 
