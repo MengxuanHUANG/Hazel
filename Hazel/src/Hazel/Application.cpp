@@ -78,7 +78,7 @@ namespace Hazel {
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 			{
-				layer->OnImGuiRender(m_LastFrameTime);
+				layer->OnImGuiRender(timestep);
 			}
 			m_ImGuiLayer->End();
 

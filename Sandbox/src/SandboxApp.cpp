@@ -205,6 +205,17 @@ public:
 		ImGui::Begin("Settings");
 		ImGui::SetWindowFontScale(2.0f);
 		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_BackGroundColor));
+
+		if ((m_Count++) % 10);
+		else
+		{
+			std::stringstream ss;
+			ss << "fps: " << 1.0f / timestep;
+			m_FPS = ss.str();
+			m_Count = 1;
+		}
+
+		ImGui::Text(m_FPS.c_str());
 		ImGui::End();
 	}
 
@@ -233,6 +244,9 @@ private:
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
 	glm::vec3 m_BackGroundColor = { 0.1f, 0.1f, 0.1f };
+
+	std::string m_FPS;
+	unsigned int m_Count = 0;
 };
 
 class Sandbox : public Hazel::Application
