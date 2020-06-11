@@ -11,6 +11,7 @@
 #include "Hazel/Input.h"
 #include "Hazel/MouseButton.h"
 #include "Hazel/Keycode.h"
+#include "Hazel/Camera/OrthographicCameraController.h"
 
 // ---------------- Renderer ----------------
 #include "Hazel/Renderer/Shader.h"
@@ -21,6 +22,8 @@
 #include "Hazel/Renderer/VertexArray.h"
 #include "Hazel/Renderer/Renderer.h"
 #include "Hazel/Renderer/Texture.h"
+
+#include "Hazel/Camera/OrthographicCamera.h"
 //-------------------------------------------
 
 #include "Hazel/ImGui/ImGuiLayer.h"

@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Hazel\Camera\OrthographicCameraController.h" />
     <ClInclude Include="src\HZpch.h" />
     <ClInclude Include="src\Hazel.h" />
     <ClInclude Include="src\Hazel\Application.h" />
@@ -596,6 +597,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazel\Camera\OrthographicCameraController.cpp" />
     <ClCompile Include="src\HZpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

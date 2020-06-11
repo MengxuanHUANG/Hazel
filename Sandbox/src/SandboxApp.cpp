@@ -11,7 +11,7 @@ class ExampleLayer : public Hazel::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f)
+		:Layer("Example"), m_CameraController((1280.0f / 720.0f), true)
 	{
 		//---------------------Triangle-------------------------
 		{
@@ -149,32 +149,14 @@ public:
 	void OnUpdate(Hazel::Timestep timestep) override
 	{
 		float ts = timestep;
-		
-		//Move Camera
-		if(Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMovedSpeed * ts;
-		else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMovedSpeed * ts;
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-			m_CameraPosition.y += m_CameraMovedSpeed * ts;
-		else if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMovedSpeed * ts;
-		//Rotate the Camera
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
-			m_CameraRotation += m_CameraRotatedSpeed * ts;
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
-			m_CameraRotation -= m_CameraRotatedSpeed * ts;
+		m_CameraController.OnUpdata(ts);
 
 		//Set BackGround Color
-		Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		Hazel::RenderCommand::SetClearColor(glm::vec4(m_BackGroundColor, 1.0f));
 		Hazel::RenderCommand::Clear();
 
-		//Set Camera Position
-		m_Camera.SetPostion(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
 		//Start a new Scene
-		Hazel::Renderer::BeginScene(m_Camera);
+		Hazel::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		//++++++++++++++++++++Will be implement in the future++++++++++++++
 		/*Hazel::Material* material = new Hazel::Material(m_FlatColorShader);
@@ -222,14 +204,13 @@ public:
 	{
 		ImGui::Begin("Settings");
 		ImGui::SetWindowFontScale(2.0f);
-		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_BackGroundColor));
 		ImGui::End();
 	}
 
 	void OnEvent(Hazel::Event& event) override
 	{
-		Hazel::EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(ExampleLayer::OnKeyPressedEvent));
+		m_CameraController.OnEvent(event);
 	}
 
 	bool OnKeyPressedEvent(Hazel::KeyPressedEvent& event)
@@ -248,14 +229,10 @@ private:
 	Hazel::Ref<Hazel::Texture2D> m_LogoTexture;
 	Hazel::Ref<Hazel::Texture2D> m_Texture;
 
-	Hazel::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraRotation = 0.0f;
-
-	float m_CameraMovedSpeed = 5.0f;
-	float m_CameraRotatedSpeed = 45.0f;
+	Hazel::OrthographicCameraController m_CameraController;
 
 	glm::vec3 m_SquareColor = {0.2f, 0.3f, 0.8f};
+	glm::vec3 m_BackGroundColor = { 0.1f, 0.1f, 0.1f };
 };
 
 class Sandbox : public Hazel::Application
