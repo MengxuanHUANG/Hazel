@@ -89,7 +89,7 @@ public:
 			Hazel::Ref<Hazel::VertexBuffer> squareVB;
 			squareVB.reset(Hazel::VertexBuffer::Create(square, sizeof(square)));
 
-			layout = {
+			Hazel::BufferLayout layout = {
 				{ Hazel::ShaderDataType::Float3, "a_Position" },
 				{ Hazel::ShaderDataType::Float2, "a_TextCoord" }
 			};
