@@ -23,8 +23,16 @@ namespace Hazel
 		std::string program = ReadFile(filepath);
 		auto shaderSources = PreProcess(program);
 		Compile(shaderSources);
+
+		size_t lastSlash = filepath.find_last_of("/\\");
+		lastSlash = (lastSlash == std::string::npos) ? 0 : lastSlash + 1;
+		size_t lastDot = filepath.rfind('.');
+		size_t count = (lastDot == std::string::npos) ? filepath.size() - lastSlash : lastDot - lastSlash;
+
+		m_Name = filepath.substr(lastSlash, count);
 	}
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+		:m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -39,7 +47,7 @@ namespace Hazel
 	{
 		std::string result;
 		std::ifstream fin;
-		fin.open(filepath, std::ios::in, std::ios::binary);
+		fin.open(filepath, std::ios::in | std::ios::binary);
 
 		if (fin)
 		{
@@ -123,7 +131,10 @@ namespace Hazel
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string> shaderSources)
 	{
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs(shaderSources.size());
+		HZ_CORE_ASSERT(shaderSources.size() <= 2, "Over Max. Number of Shaders!");
+		std::array<GLenum, 2> glShaderIDs;
+
+		int glShadreIDIndex = 0;
 
 		for (auto& key : shaderSources)
 		{
@@ -158,7 +169,7 @@ namespace Hazel
 			}
 
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[glShadreIDIndex++] = shader;
 		}
 		// Link our program
 		glLinkProgram(program);

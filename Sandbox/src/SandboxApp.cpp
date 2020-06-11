@@ -72,7 +72,7 @@ public:
 				}
 			)";
 
-			m_Shader.reset(Hazel::Shader::Create(vertexSrc, fragmentSrc));
+			m_Shader = Hazel::Shader::Create("TriangleShader", vertexSrc, fragmentSrc);
 		}
 
 		//---------------------test Square-----------------------
@@ -132,17 +132,17 @@ public:
 				}
 			)";
 
-			m_BlueShader.reset(Hazel::Shader::Create(blueVertexSrc, blueFragmentSrc2));
+			m_BlueShader = Hazel::Shader::Create("SquareShader", blueVertexSrc, blueFragmentSrc2);
 		}
 
 		//--------------------Texture Shader---------------------
 		{
-			m_TextureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
+			Hazel::Ref<Hazel::Shader> shader = m_ShaderLib.Load("assets/shaders/Texture.glsl");
 			m_Texture = Hazel::Texture2D::Create("assets/textures/test_texture.png");
 			//m_LogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-			std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
-			std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+			std::dynamic_pointer_cast<Hazel::OpenGLShader>(shader)->Bind();
+			std::dynamic_pointer_cast<Hazel::OpenGLShader>(shader)->UploadUniformInt("u_Texture", 0);
 		}
 	}
 
@@ -202,8 +202,9 @@ public:
 		}*/
 
 		//****************************Render the Image*************************
+		auto TextureShader = m_ShaderLib.Get("Texture");
 		m_Texture->Bind();
-		Hazel::Renderer::Submit(m_TextureShader, m_Square_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Hazel::Renderer::Submit(TextureShader, m_Square_VertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//*************************Rendere the Logo***************************
 		//m_LogoTexture->Bind();
@@ -237,10 +238,11 @@ public:
 	}
 
 private:
+	Hazel::ShaderLib m_ShaderLib;
 	Hazel::Ref<Hazel::Shader> m_Shader;
 	Hazel::Ref<Hazel::VertexArray> m_VertexArray;
 
-	Hazel::Ref<Hazel::Shader> m_BlueShader, m_TextureShader;
+	Hazel::Ref<Hazel::Shader> m_BlueShader;
 	Hazel::Ref<Hazel::VertexArray> m_Square_VertexArray;
 
 	Hazel::Ref<Hazel::Texture2D> m_LogoTexture;
