@@ -11,7 +11,7 @@ class ExampleLayer : public Hazel::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example"), m_CameraController((1280.0f / 720.0f), true)
+		:Layer("Example"), m_CameraController((2048.0f / 1080.0f), true)
 	{
 		//---------------------Triangle-------------------------
 		{
@@ -222,6 +222,11 @@ public:
 	void OnEvent(Hazel::Event& event) override
 	{
 		m_CameraController.OnEvent(event);
+
+		if (event.GetEventType() == Hazel::EventType::WindowResize)
+		{
+			auto& re = (Hazel::WindowResizeEvent&) event;
+		}
 	}
 
 	bool OnKeyPressedEvent(Hazel::KeyPressedEvent& event)
