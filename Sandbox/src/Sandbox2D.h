@@ -22,6 +22,8 @@ private:
 	Hazel::Ref<Hazel::VertexArray> m_VertexArray;
 	Hazel::Ref<Hazel::Shader> m_Shader;
 
+	Hazel::Ref<Hazel::Texture2D> m_Texture;
+
 	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 
 	std::string m_FPS;
