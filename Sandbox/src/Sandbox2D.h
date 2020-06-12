@@ -28,4 +28,12 @@ private:
 
 	std::string m_FPS;
 	unsigned int m_Count = 0;
+
+	struct ProfileResult
+	{
+		const char* Name;
+		float Time;
+	};
+
+	std::vector<ProfileResult> m_ProfileResults;
 };

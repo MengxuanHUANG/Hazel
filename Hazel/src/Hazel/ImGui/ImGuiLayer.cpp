@@ -67,13 +67,6 @@ namespace Hazel
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnImGuiRender(float timestep)
-	{
-		static bool show = true;
-		ImGui::SetWindowFontScale(2.0f);
-		ImGui::ShowDemoWindow(&show);
-	}
-
 	void ImGuiLayer::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
