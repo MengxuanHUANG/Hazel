@@ -11,20 +11,28 @@ namespace Hazel
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t sizes)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, sizes, vertices, GL_STATIC_DRAW);
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glDeleteBuffers(1, &m_RendererID);
 	}
 	void OpenGLVertexBuffer::Bind() const
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 	}
 	void OpenGLVertexBuffer::UnBind() const
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 

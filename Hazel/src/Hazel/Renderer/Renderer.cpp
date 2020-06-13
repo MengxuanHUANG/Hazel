@@ -18,6 +18,8 @@ namespace Hazel
 	}
 	void Renderer::Init()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}
@@ -36,5 +38,9 @@ namespace Hazel
 	}
 	void Renderer::Flush()
 	{
+	}
+	void Renderer::Shutdown()
+	{
+
 	}
 }

@@ -15,6 +15,7 @@ namespace Hazel
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
+		void OnImGuiRender(float timestep) override;
 
 		void Begin();
 		void End();

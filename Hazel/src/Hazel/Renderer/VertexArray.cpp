@@ -15,7 +15,7 @@ namespace Hazel
 			HZ_CORE_ASSERT(false, "RendererAPI::None is not support!");
 			return nullptr;
 		case RendererAPI::OpenGL:
-			return std::make_shared<OpenGLVertexArray>();
+			return CreateRef<OpenGLVertexArray>();
 		default:
 			break;
 		}

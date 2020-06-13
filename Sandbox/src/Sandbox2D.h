@@ -14,7 +14,6 @@ public:
 	virtual void OnUpdate(Hazel::Timestep timestep)override;
 	virtual void OnImGuiRender(float timestep)override;
 	virtual void OnEvent(Hazel::Event& event)override;
-
 private:
 	Hazel::OrthographicCameraController m_CameraController;
 
@@ -23,8 +22,10 @@ private:
 	Hazel::Ref<Hazel::Shader> m_Shader;
 
 	Hazel::Ref<Hazel::Texture2D> m_Texture;
+	Hazel::Ref<Hazel::Texture2D> m_Texture_2;
 
-	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
+	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+	float m_Rotation = 0.0f;
 
 	std::string m_FPS;
 	unsigned int m_Count = 0;

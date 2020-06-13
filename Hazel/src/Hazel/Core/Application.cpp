@@ -1,28 +1,27 @@
 #include "HZpch.h"
 #include "Application.h"
 
-#include "Hazel/Core/Timestep.h"
-
-#include "Hazel/Core/Log.h"
-#include "Hazel/Core/Input.h"
-
-#include "Hazel/Renderer/RenderCommand.h"
-
 #include <GLFW/glfw3.h>
 
-namespace Hazel {
+#include "Hazel/Core/Timestep.h"
+#include "Hazel/Core/Input.h"
+#include "Hazel/Renderer/RenderCommand.h"
 
-#define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
+#include "Hazel/Core/Log.h" //TODO: Remove 
+
+namespace Hazel {
 
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		HZ_CORE_ASSERT(!s_Instance, "Application already exists");
 		s_Instance = this;
 
-		m_Window = std::unique_ptr<Window>(Window::Create());
-		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+		m_Window = Window::Create();
+		m_Window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
 
@@ -32,7 +31,7 @@ namespace Hazel {
 
 	Application::~Application()
 	{
-
+		Renderer::Shutdown();
 	}
 	
 	void Application::PushLayer(Layer* layer)
@@ -50,8 +49,8 @@ namespace Hazel {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
+		dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
 
 		//HZ_CORE_TRACE("{0}", e);
 
@@ -71,20 +70,26 @@ namespace Hazel {
 
 			if (!m_Minimize)
 			{
-				for (Layer* layer : m_LayerStack)
 				{
-					layer->OnUpdate(timestep);
-				}
-				
-			}
+					HZ_PROFILE_SCOPE("LayerStack OnUpdate");
 
-			//ImGuiLayer components
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
-			{
-				layer->OnImGuiRender(timestep);
+					for (Layer* layer : m_LayerStack)
+					{
+						layer->OnUpdate(timestep);
+					}
+				}
+
+				//ImGuiLayer components
+				m_ImGuiLayer->Begin();
+				{
+					HZ_PROFILE_SCOPE("LayerStack OnImGuiRender");
+					for (Layer* layer : m_LayerStack)
+					{
+						layer->OnImGuiRender(timestep);
+					}
+				}
+				m_ImGuiLayer->End();
 			}
-			m_ImGuiLayer->End();
 			m_Window->OnUpdate();
 		}
 	}
@@ -97,6 +102,8 @@ namespace Hazel {
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		if (e.GetHeight() == 0 || e.GetWidth() == 0)
 		{
 			m_Minimize = true;

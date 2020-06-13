@@ -3,11 +3,6 @@
 
 namespace Hazel {
 
-	LayerStack::LayerStack()
-	{
-		m_LayerInsertIndex = 0;
-	}
-
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_Layers)

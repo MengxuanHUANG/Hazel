@@ -1,6 +1,7 @@
 #include "HZpch.h"
 #include "WindowsWindow.h"
 
+
 #include "Hazel/Event/ApplicationEvent.h"
 #include "Hazel/Event/KeyEvent.h"
 #include "Hazel/Event/MouseEvent.h"
@@ -10,52 +11,65 @@
 namespace Hazel {
 
 	static bool s_GLFWInitialized = false;
+	static unsigned int s_GLFWWindowCount = 0;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		HZ_CORE_ERROR("GLDW Error({0}): {1}", error, description);
 	}
 
-	Window* Window::Create(const WindowProps& props)
+	Scope<Window> Window::Create(const WindowProps& props)
 	{
 		/*
 		Notes:
 		if a Class is inherited from an "Abstruct Class", which contians virtual functions,
 		it must override all virtual functions when use pointers of its parent class .
 		*/
-		return new WindowsWindow(props);
+		return CreateScope<WindowsWindow>(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Height = props.Height;
 		m_Data.Width = props.Width;
 
 		HZ_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (!s_GLFWInitialized)
+		if (s_GLFWWindowCount == 0)
 		{
-			//TODO: glfwTerminate on system shutdown
+			HZ_PROFILE_SCOPE("glfwInit");
+
 			int success = glfwInit();
 			HZ_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		{
+			HZ_PROFILE_SCOPE("glfwCreateWindow");
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		}
 
-		m_Context = new OpenGLContext(m_Window);
+		++s_GLFWWindowCount;
+
+		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 
 		// ^_^
@@ -157,17 +171,30 @@ namespace Hazel {
 
 	void WindowsWindow::Shutdown()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
+		--s_GLFWWindowCount;
+
+		if (!s_GLFWWindowCount)
+		{
+			glfwTerminate();
+		}
+		
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		HZ_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		HZ_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

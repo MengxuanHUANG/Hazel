@@ -1,9 +1,7 @@
 #include "HZpch.h"
 #include "RenderCommand.h"
 
-#include "Platform/OpenGL/OpenGLRenderAPI.h"
-
 namespace Hazel
 {
-	RenderAPI* RenderCommand::s_RenderAPI = new OpenGLRenderAPI();
+	Scope<RenderAPI> RenderCommand::s_RenderAPI = RenderAPI::Create();
 }

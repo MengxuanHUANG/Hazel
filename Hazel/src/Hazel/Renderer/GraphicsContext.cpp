@@ -1,0 +1,20 @@
+#include"HZpch.h"
+#include "GraphicsContext.h"
+
+#include "Renderer.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+
+namespace Hazel
+{
+	Scope<GraphicsContext> GraphicsContext::Create(void* window)
+	{
+		switch (Renderer::GetRendererAPI())
+		{
+		case RendererAPI::None:    HZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::OpenGL:  return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
+		}
+
+		HZ_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+}

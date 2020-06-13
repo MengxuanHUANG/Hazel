@@ -140,6 +140,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Hazel\Debug\Instrumentor.h" />
     <ClInclude Include="src\Hazel\Renderer\Renderer2D.h" />
     <ClInclude Include="src\HZpch.h" />
     <ClInclude Include="src\Hazel.h" />
@@ -598,6 +599,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Hazel\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Hazel\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\HZpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
